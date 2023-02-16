@@ -13,12 +13,10 @@ public class PlayerLook : MonoBehaviour
     [SerializeField]
     [Tooltip("définit la rotation maximum x : vers le bas,et y : vers le haut")]
     private Vector2 _mouseYLimit;
-    [SerializeField]
-    private Transform _cameraTransform;
 
     private void Awake()
     {
-        
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Start()
@@ -28,22 +26,26 @@ public class PlayerLook : MonoBehaviour
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-        mouseX = _mouseSensitivity.x * Time.deltaTime;
-        mouseY = _mouseSensitivity.y * Time.deltaTime;
+        //Rotation Camera
+        CameraRotation();
+    }
 
-        float gamePadX = Input.GetAxis("RightHorizontal");
-        float gamePadY = Input.GetAxis("RightVertical");
-        gamePadX = _padSensitivity.x * Time.deltaTime;
-        gamePadY = _padSensitivity.y * Time.deltaTime;
+    private void CameraRotation()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity.x * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * _mouseSensitivity.y * Time.deltaTime;
+        
+        //float gamePadX = Input.GetAxis("RightHorizontal");
+        //float gamePadY = Input.GetAxis("RightVertical");
+        //gamePadX = _padSensitivity.x * Time.deltaTime;
+        //gamePadY = _padSensitivity.y * Time.deltaTime;
 
-        _horizontal += mouseX + gamePadX;
-        _vertical += mouseY + gamePadY;
+        _horizontal += mouseX /*+ gamePadX*/;
+        _vertical += mouseY /*+ gamePadY*/;
         _vertical = Mathf.Clamp(_vertical, _mouseYLimit.x, _mouseYLimit.y);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, _horizontal, transform.eulerAngles.z);
-
-        _cameraTransform.eulerAngles = new Vector3(_vertical, _cameraTransform.eulerAngles.y, _cameraTransform.eulerAngles.z);
+   
+        Camera.main.transform.eulerAngles = new Vector3(_vertical, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
     }
 
     private float _horizontal;
