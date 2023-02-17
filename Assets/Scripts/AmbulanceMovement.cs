@@ -7,13 +7,13 @@ public class AmbulanceMovement : MonoBehaviour
     [SerializeField]
     private float _speed;
     [SerializeField]
-    private float _maxDistance;
+    private Transform _startPoint;
     [SerializeField]
-    private float _minDistance;
+    private Transform _endPoint;
 
     private void Awake()
     {
-        _rigidBody = GetComponent<Rigidbody>();
+        transform.position = _startPoint.position;
     }
     void Start()
     {
@@ -21,21 +21,32 @@ public class AmbulanceMovement : MonoBehaviour
     }
     void Update()
     {
+        Movement();
+    }
+
+    private void Movement()
+    {
         
+         if (_isForward)
+         {
+             _timerMovement += Time.deltaTime;
+             if (_timerMovement >= _speed)
+             {
+                 _isForward = false;
+             }
+         }
+         else
+         {
+             _timerMovement -= Time.deltaTime;
+             if (_timerMovement <= 0f)
+             {
+                 _isForward = true;
+             }
+         }
+         Vector3 newPosition = Vector3.Lerp(_startPoint.position, _endPoint.position, _timerMovement / _speed);
+         transform.position = newPosition;
     }
-
-    private void PushForward()
-    {
-        _rigidBody.velocity = transform.forward * _speed;
-    }
-
-    private void UTurn()
-    {
-        transform.forward = -transform.forward;
-        _isFacingNorth = !_isFacingNorth;
-        PushForward();
-    }
-
-    private bool _isFacingNorth;
-    private Rigidbody _rigidBody;
+   
+    private float _timerMovement = 0f;
+    private bool _isForward = true;
 }

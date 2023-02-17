@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
     private float _speed;
+    [SerializeField]
+    private AudioSource _footSteps;
 
     private void Awake()
     {
@@ -31,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = direction * _speed * Time.deltaTime;
 
         _characterControlller.Move(move);
+
+        _footSteps.pitch = _speed;
     }
 
     private CharacterController _characterControlller;
