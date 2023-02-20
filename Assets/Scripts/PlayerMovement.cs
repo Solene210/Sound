@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -34,8 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
         _characterControlller.Move(move);
 
-        _footSteps.pitch = _speed;
+        _footSteps.pitch = _characterControlller.velocity.magnitude / _speed;
+        _footSteps.pitch = _footSteps.pitch * _speed;
     }
-
     private CharacterController _characterControlller;
 }

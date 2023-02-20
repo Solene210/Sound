@@ -25,29 +25,38 @@ public class PlayerInteraction : MonoBehaviour
     private void FindTarget()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray.origin, transform.TransformDirection(Vector3.forward), out RaycastHit hitInfo, _maxDistance))
+        RaycastHit hitInfo;
+        if (Physics.Raycast(ray, out hitInfo, _maxDistance))
         {
+            _target = hitInfo.collider.GetComponent<IUsable>();
             Debug.Log("Hit something");
-            Debug.DrawRay(ray.origin, transform.TransformDirection(Vector3.forward) * hitInfo.distance, Color.red);
+            //Debug.DrawRay(ray.origin, transform.forward, Color.red);
         }
         else
         {
+            _target= null;
             Debug.Log("Did not hit something");
-            Debug.DrawRay(ray.origin, transform.TransformDirection(Vector3.forward) * _maxDistance, Color.yellow);
+            //Debug.DrawRay(ray.origin, transform.forward, Color.yellow);
         }
     }
 
     private void UseTarget()
     {
-
+        if(Input.GetButtonDown("Use"))
+        {
+            _target.Use();
+        }
     }
 
     private void ChangeCrossHairState()
     {
-        if (true)
+        if (_target != null)
         {
             _knob.color = Color.green;
+        }
+        else
+        {
+            _knob.color = Color.white;
         }
     }
 

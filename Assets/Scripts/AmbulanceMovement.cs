@@ -7,46 +7,46 @@ public class AmbulanceMovement : MonoBehaviour
     [SerializeField]
     private float _speed;
     [SerializeField]
-    private Transform _startPoint;
+    private Transform[] _waypoint;
     [SerializeField]
-    private Transform _endPoint;
+    private float _reachTolerance = 0.1f;
 
-    private void Awake()
-    {
-        transform.position = _startPoint.position;
-    }
     void Start()
     {
-        
+         transform.position = _waypoint[0].position;
+        _targetWaypointIndex = 1;
     }
     void Update()
     {
-        Movement();
+        Vector3 currentWaypointPosition = _waypoint[_targetWaypointIndex].position;
+        Vector3 position = Vector3.MoveTowards(transform.position, currentWaypointPosition, _speed * Time.deltaTime);
+        transform.position = position;
+
+        if (Vector3.Distance(transform.position, currentWaypointPosition) <= _reachTolerance)
+        {
+            Movement();
+        }
     }
 
     private void Movement()
     {
-        
-         if (_isForward)
-         {
-             _timerMovement += Time.deltaTime;
-             if (_timerMovement >= _speed)
-             {
-                 _isForward = false;
-             }
-         }
-         else
-         {
-             _timerMovement -= Time.deltaTime;
-             if (_timerMovement <= 0f)
-             {
-                 _isForward = true;
-             }
-         }
-         Vector3 newPosition = Vector3.Lerp(_startPoint.position, _endPoint.position, _timerMovement / _speed);
-         transform.position = newPosition;
+        if (_isForward)
+        {
+            _targetWaypointIndex++;
+            if (_targetWaypointIndex >= _waypoint.Length - 1)
+            {
+                _isForward = false;
+            }
+        }
+        else
+        {
+            _targetWaypointIndex--;
+            if (_targetWaypointIndex <= 0)
+            {
+                _isForward = true;
+            }
+        }
     }
-   
-    private float _timerMovement = 0f;
+    private int _targetWaypointIndex;
     private bool _isForward = true;
 }

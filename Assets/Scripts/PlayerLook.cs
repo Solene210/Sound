@@ -35,19 +35,16 @@ public class PlayerLook : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity.x * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * _mouseSensitivity.y * Time.deltaTime;
         
-        //float gamePadX = Input.GetAxis("RightHorizontal");
-        //float gamePadY = Input.GetAxis("RightVertical");
-        //gamePadX = _padSensitivity.x * Time.deltaTime;
-        //gamePadY = _padSensitivity.y * Time.deltaTime;
+        float gamePadX = Input.GetAxis("RightHorizontal") * _padSensitivity.x * Time.deltaTime;
+        float gamePadY = Input.GetAxis("RightVertical") * _padSensitivity.y * Time.deltaTime;
 
-        _horizontal += mouseX /*+ gamePadX*/;
-        _vertical += mouseY /*+ gamePadY*/;
+        _horizontal += mouseX + gamePadX;
+        _vertical += mouseY + gamePadY;
         _vertical = Mathf.Clamp(_vertical, _mouseYLimit.x, _mouseYLimit.y);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, _horizontal, transform.eulerAngles.z);
    
         Camera.main.transform.eulerAngles = new Vector3(_vertical, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z);
     }
-
     private float _horizontal;
     private float _vertical;
 }
